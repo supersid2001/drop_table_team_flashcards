@@ -19,7 +19,7 @@ const PlusButton = ({ onAddFlashcard }) => {
         +
       </div>
       {showModal && (
-        <AddFlashcard onClose={closeModal} onAdd={onAddFlashcard} />
+        <AddFlashcard onAdd={onAddFlashcard} onClose={closeModal} />
       )}
     </div>
   );

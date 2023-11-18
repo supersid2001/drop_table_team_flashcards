@@ -16,7 +16,7 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <AddFlashcard onAdd={handleAddFlashcard} />
+      <PlusButton onAddFlashcard={handleAddFlashcard} />
       <Dashboard flashcards={flashcards} />
     </div>
   );

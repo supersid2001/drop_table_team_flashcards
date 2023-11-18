@@ -1,11 +1,25 @@
 import styles from "../styles/Home.module.css";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const AddFlashcard = ({ onAdd, onClose }) => {
   const [term, setTerm] = useState("");
   const [definition, setDefinition] = useState("");
   const [image, setImage] = useState(null);
+
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
 
   const handleCreate = () => {
     if (!term && !image) {
@@ -18,7 +32,8 @@ const AddFlashcard = ({ onAdd, onClose }) => {
       return;
     }
 
-    onAdd({ term: term || "Image", definition, image });
+    // onAdd(term, definition);
+    onAdd({ term: term || "", definition, image });
 
     setTerm("");
     setDefinition("");
@@ -32,7 +47,7 @@ const AddFlashcard = ({ onAdd, onClose }) => {
   };
 
   return (
-    <div className={styles.modalContainer}>
+    <div className={styles.modalContainer} ref={modalRef}>
       <div className={styles.modal}>
         <h2 className={styles.subtitle}>Add Flashcard</h2>
         <label className={styles.label}>
