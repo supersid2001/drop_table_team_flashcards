@@ -2,6 +2,8 @@ import styles from "../styles/Home.module.css";
 
 import { useState, useEffect, useRef } from "react";
 
+
+//ADD HERE: GET NEW INPUT, ADD IT TO DB, ADD A FLASHCARD FROM OUTPUT 
 const AddFlashcard = ({ onAdd, onClose }) => {
   const [term, setTerm] = useState("");
   const [definition, setDefinition] = useState("");
@@ -34,6 +36,7 @@ const AddFlashcard = ({ onAdd, onClose }) => {
 
     // onAdd(term, definition);
     onAdd({ term: term || "", definition, image });
+    
 
     setTerm("");
     setDefinition("");

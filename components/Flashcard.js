@@ -9,7 +9,6 @@ const Flashcard = ({ term, definition, image }) => {
       setImageUrl(URL.createObjectURL(image));
     }
   }, [image]);
-
   return (
     <div className={styles.flashcard}>
       {imageUrl && (
