@@ -22,7 +22,7 @@ const Home = () => {
           ...data.translationData.map((entry, index) => ({
             term: entry.inputText,
             definition: entry.outputText,
-            id: flashcards.length + 1, 
+            id: index + 1, 
           })),
         ]);
       })

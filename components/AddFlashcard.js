@@ -39,25 +39,38 @@ const AddFlashcard = ({ onAdd, onClose }) => {
       //TODO CHECK IF VALID LANGAUGE CODE!
       return;
     }
-    else if(term){
+    else if(!image){
       //TODO CHANGE CALL
-      var result = await fetch("http://localhost:18080/get_translation_history/?id=" + localStorage.getItem('id'))
-      var resJSON = result.json()
-      var data = JSON.parse(resJSON.message)
-      //TODO: MODIFY BASED ON MESSAGE
-      definition = data.outputText
-      // onAdd(term, definition);
-      onAdd({ term: term || "", definition: definition});
+      //var result = await fetch("http://localhost:18080/post_translation_to_client/?tbt=" + term+"&tl=" + "langTo" + "&fl=" + langFrom + "&id=" + localStorage.getItem('id'))
+      var link = "http://localhost:18080/post_translation_to_client/?tbt=" + term + "&tl=" + langTo + "&fl=" + langFrom + "&id=" + localStorage.getItem('id')
+      fetch(link, {
+        method: 'POST'
+      }).then((result) => {
+        console.log(link)
+        result.json().then((resJSON) => {
+          console.log(resJSON)
+          var definition = resJSON.translatedText
+          // onAdd(term, definition);
+          onAdd({ term: term || "", definition: definition});
+        })
+      })
     } else {
-      //TODO ADD IMAGE CALL HERE
       //TODO CHANGE CALL
-      var result = await fetch("http://localhost:18080/get_translation_history/?id=" + localStorage.getItem('id'))
-      var resJSON = result.json()
-      var data = JSON.parse(resJSON.message)
-      //TODO: MODIFY BASED ON MESSAGE
-      definition = data.outputText
-      // onAdd(term, definition);
-      onAdd({ term: term || "", definition: definition});
+      //var result = await fetch("http://localhost:18080/post_translation_to_client/?tbt=" + term+"&tl=" + "langTo" + "&fl=" + langFrom + "&id=" + localStorage.getItem('id'))
+      var link = "http://localhost:18080/post_image_translation/?&tl=" + langTo + "&fl=" + langFrom + "&id=" + localStorage.getItem('id')
+      fetch(link, {
+        method: 'POST',
+        body: image,
+        headers: {"Content-Type": "form-data"},
+      }).then((result) => {
+        console.log(link)
+        result.json().then((resJSON) => {
+          console.log(resJSON)
+          var definition = resJSON.translatedText
+          // onAdd(term, definition);
+          onAdd({ term: term || "", definition: definition});
+        })
+      })
     }
     
 
@@ -86,7 +99,7 @@ const AddFlashcard = ({ onAdd, onClose }) => {
           />
         </label>
         <label className={styles.label}>
-          Language from:
+          Language to:
           <input
             type="text"
             value={langTo}
