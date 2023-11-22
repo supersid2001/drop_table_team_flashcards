@@ -58,22 +58,21 @@ const AddFlashcard = ({ onAdd, onClose }) => {
       //TODO CHANGE CALL
       //var result = await fetch("http://localhost:18080/post_translation_to_client/?tbt=" + term+"&tl=" + "langTo" + "&fl=" + langFrom + "&id=" + localStorage.getItem('id'))
       var link = "http://localhost:18080/post_image_translation/?&tl=" + langTo + "&fl=" + langFrom + "&id=" + localStorage.getItem('id')
+      const formData = new FormData()
+      formData.append('file', image);
       fetch(link, {
         method: 'POST',
-        body: image,
-        headers: {"Content-Type": "form-data"},
+        body: formData
       }).then((result) => {
         console.log(link)
         result.json().then((resJSON) => {
           console.log(resJSON)
           var definition = resJSON.translatedText
           // onAdd(term, definition);
-          onAdd({ term: term || "", definition: definition});
+          onAdd({ term: resJSON.textToBeTranslated || "", definition: definition});
         })
       })
     }
-    
-
     setTerm("");
     setImage(null);
     onClose();
