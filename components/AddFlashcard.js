@@ -6,7 +6,8 @@ import { useState, useEffect, useRef } from "react";
 //ADD HERE: GET NEW INPUT, ADD IT TO DB, ADD A FLASHCARD FROM OUTPUT 
 const AddFlashcard = ({ onAdd, onClose }) => {
   const [term, setTerm] = useState("");
-  const [definition, setDefinition] = useState("");
+  const [langTo, setLangTo] = useState("");
+  const [langFrom, setLangFrom] = useState("");
   const [image, setImage] = useState(null);
 
   const modalRef = useRef(null);
@@ -23,23 +24,44 @@ const AddFlashcard = ({ onAdd, onClose }) => {
     };
   }, [onClose]);
 
-  const handleCreate = () => {
+  const  handleCreate = async () => {
     if (!term && !image) {
       alert("Please fill in either the term or upload an image");
       return;
     }
-
-    if (!definition) {
-      alert("Please fill in both term and definition");
+    if(!langTo){
+      alert("Please fill in langauge to");
+      //TODO CHECK IF VALID LANGAUGE CODE!
       return;
     }
-
-    // onAdd(term, definition);
-    onAdd({ term: term || "", definition, image });
+    if(!langFrom){
+      alert("Please fill in langauge from");
+      //TODO CHECK IF VALID LANGAUGE CODE!
+      return;
+    }
+    else if(term){
+      //TODO CHANGE CALL
+      var result = await fetch("http://localhost:18080/get_translation_history/?id=" + localStorage.getItem('id'))
+      var resJSON = result.json()
+      var data = JSON.parse(resJSON.message)
+      //TODO: MODIFY BASED ON MESSAGE
+      definition = data.outputText
+      // onAdd(term, definition);
+      onAdd({ term: term || "", definition: definition});
+    } else {
+      //TODO ADD IMAGE CALL HERE
+      //TODO CHANGE CALL
+      var result = await fetch("http://localhost:18080/get_translation_history/?id=" + localStorage.getItem('id'))
+      var resJSON = result.json()
+      var data = JSON.parse(resJSON.message)
+      //TODO: MODIFY BASED ON MESSAGE
+      definition = data.outputText
+      // onAdd(term, definition);
+      onAdd({ term: term || "", definition: definition});
+    }
     
 
     setTerm("");
-    setDefinition("");
     setImage(null);
     onClose();
   };
@@ -64,12 +86,22 @@ const AddFlashcard = ({ onAdd, onClose }) => {
           />
         </label>
         <label className={styles.label}>
-          Definition:
+          Language from:
           <input
             type="text"
-            value={definition}
-            onChange={(e) => setDefinition(e.target.value)}
-            placeholder="Enter definition"
+            value={langTo}
+            onChange={(e) => setLangTo(e.target.value)}
+            placeholder="Enter language translating to"
+            className={styles.input}
+          />
+        </label>
+        <label className={styles.label}>
+          Language from:
+          <input
+            type="text"
+            value={langFrom}
+            onChange={(e) => setLangFrom(e.target.value)}
+            placeholder="Enter language translating from"
             className={styles.input}
           />
         </label>
