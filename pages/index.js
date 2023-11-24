@@ -3,17 +3,22 @@ import Dashboard from "../components/Dashboard";
 import AddFlashcard from "../components/AddFlashcard";
 import styles from "../styles/Home.module.css";
 import PlusButton from "../components/PlusButton";
+import { useRouter } from 'next/router';
 
 const Home = () => {
   const [flashcards, setFlashcards] = useState([]);
-
+  const router = useRouter();
     async function getData(){
-      localStorage.setItem('id', '652fe0fe6d3216d1ff0ea25e');
       const res = await fetch("http://localhost:18080/get_translation_history/?id=" + localStorage.getItem('id'))
       return res.json()
     }
   
     useEffect(() => {
+      console.log(localStorage.getItem('id'))
+      if (!localStorage.getItem('id')) {
+        router.push('/login'); 
+        return;
+      } else {
       getData().then((translationHistory) => {
         console.log(translationHistory.message)
         var data = JSON.parse(translationHistory.message)
@@ -26,6 +31,7 @@ const Home = () => {
           })),
         ]);
       })
+    }
         
     }, [])
 
